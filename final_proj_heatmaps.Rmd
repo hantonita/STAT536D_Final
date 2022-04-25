@@ -1,0 +1,357 @@
+# Visualizations
+
+```{r}
+# Basic method, n=1000 
+
+load(paste0("clean/res_trgt.RData"))
+tbl <- cor_gather(trgt_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor - log(2)))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Bias Heatmap with Target Values, n=1000") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+```{r}
+# Basic method, n=500
+
+load(paste0("clean/res_trgt_500.RData"))
+tbl <- cor_gather(trgt_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor - log(2)))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Bias Heatmap with Target Values, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+```{r}
+load(paste0("clean/res_trgt_500.RData"))
+tbl <- cor_gather(trgt_summary)
+tbl$cor <- abs(tbl$cor-log(2))
+g <- ggplot(tbl, aes(x=var1, y=cor, group=var2, color=var2)) + geom_point() + geom_path(aes(x=var1, y=cor, group=var2, color=var2)) + scale_color_manual(values = c("black", "orange", "skyblue", "red4", "blue", "red", "magenta", "forestgreen", "midnightblue", "gray", "green")) + theme(
+        panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("abs(bias) trends for n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_continuous(name="abs(bias)") + labs(col="Missing X=1")
+
+g
+
+g + geom_abline(slope=0, intercept=0)
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+load(paste0("clean/res_trgt.RData"))
+tbl <- cor_gather(trgt_summary)
+tbl$cor <- abs(tbl$cor-log(2))
+g <- ggplot(tbl, aes(x=var1, y=cor, group=var2, color=var2)) + geom_point() + geom_path(aes(x=var1, y=cor, group=var2, color=var2)) + scale_color_manual(values = c("black", "orange", "skyblue", "red4", "blue", "red", "magenta", "forestgreen", "midnightblue", "gray", "green")) + theme(
+        panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("abs(bias) trends for n=1000") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_continuous(name="abs(bias)") + labs(col="Missing X=1")
+
+g
+
+g + geom_abline(slope=0, intercept=0)
+```
+
+
+
+```{r}
+load(paste0("clean/res_meff_500.RData"))
+tbl <- cor_gather(m.eff_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (4000-cor)), show.legend=FALSE) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of m.eff, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+```{r}
+load(paste0("clean/res_meff.RData"))
+tbl <- cor_gather(m.eff_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (4000-cor)), show.legend=FALSE) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of m.eff, n=1000") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+```{r}
+load(paste0("clean/res_sd_500.RData"))
+tbl <- cor_gather(sd_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor)), show.legend=FALSE) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of sd, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+
+
+
+
+```{r}
+load(paste0("clean/res_sd.RData"))
+tbl <- cor_gather(sd_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor)), show.legend=FALSE) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of sd, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+
+```{r}
+load(paste0("clean/res_sens_500.RData"))
+tbl <- cor_gather(sens_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor-0.75))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of bias in sensitivity estimate, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+```{r}
+load(paste0("clean/res_sens.RData"))
+tbl <- cor_gather(sens_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor-0.75))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of bias in sensitivity estimate, n=1000") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+```{r}
+load(paste0("clean/res_spec_500.RData"))
+tbl <- cor_gather(spec_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor-0.85))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of bias in specificity estimate, n=500") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+```{r}
+load(paste0("clean/res_spec.RData"))
+tbl <- cor_gather(spec_summary)
+
+library(ggplot2)
+library(scales) # for muted function
+ggplot(tbl, aes(var1, var2)) + # x and y axes => Var1 and Var2
+  geom_tile(aes(fill = (cor-0.85))) + # background colours are mapped according to the value column
+  geom_text(aes(fill = (log(2) - cor), label = round(cor, 2))) + # write the values
+  scale_fill_gradient2(low = muted("darkred"), 
+                       mid = "white", 
+                       high = muted("midnightblue"), 
+                       midpoint = 0) + # determine the colour
+  theme(panel.grid.major.x=element_blank(), #no gridlines
+        panel.grid.minor.x=element_blank(), 
+        panel.grid.major.y=element_blank(), 
+        panel.grid.minor.y=element_blank(),
+        panel.background=element_rect(fill="white"), # background=white
+        axis.text.x = element_text(angle=90, hjust = 1,vjust=1,size = 12,face = "bold"),
+        plot.title = element_text(size=20,face="bold"),
+        axis.text.y = element_text(size = 12,face = "bold")) + 
+  ggtitle("Heatmap of bias in specificity estimate, n=1000") + 
+  theme(legend.title=element_text(face="bold", size=14)) + 
+  scale_x_discrete(name="Proportion missing in X=0") +
+  scale_y_discrete(name="Proportion missing in X=1") +
+  labs(fill="Bias")
+```
+
+
+
+
